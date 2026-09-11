@@ -217,45 +217,227 @@ section {
   font-size: 35px;
 }
 
+/* ================= LUXURY EVENT CARDS ================= */
+
 .event-grid {
-  max-width: 900px;
+  max-width: 1050px;
   margin: auto;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 28px;
 }
 
 .event-card {
   position: relative;
-  padding: 35px;
-  background: var(--cream);
+  min-height: 270px;
+  padding: 42px 35px;
+  overflow: hidden;
+  text-align: center;
+
+  background:
+    radial-gradient(circle at top right,
+      rgba(198,161,91,.12),
+      transparent 35%),
+    linear-gradient(145deg, #fffdf8, #f4ecdd);
+
+  border: 1px solid rgba(198,161,91,.42);
+
+  box-shadow:
+    0 18px 45px rgba(75,24,33,.08),
+    inset 0 0 0 5px rgba(255,255,255,.45);
+
+  transition:
+    transform .55s cubic-bezier(.2,.8,.2,1),
+    box-shadow .55s ease;
+}
+
+/* Inner gold frame */
+
+.event-card::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
   border: 1px solid rgba(198,161,91,.25);
-  transition: .5s;
+  pointer-events: none;
+}
+
+/* Decorative corners */
+
+.event-card::after {
+  content: "✦";
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  color: var(--gold);
+  font-size: 18px;
+  opacity: .75;
 }
 
 .event-card:hover {
-  transform: translateY(-7px);
-  box-shadow: 0 15px 40px rgba(75,24,33,.08);
+  transform: translateY(-10px);
+  box-shadow:
+    0 28px 60px rgba(75,24,33,.15),
+    0 0 30px rgba(198,161,91,.12);
 }
 
-.event-icon {
+/* Date */
+
+.event-card .event-icon {
+  font-family: "Cormorant Garamond", serif;
   color: var(--gold);
-  font-size: 24px;
-  margin-bottom: 18px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  margin-bottom: 8px;
 }
+
+/* Event name */
 
 .event-name {
+  position: relative;
+  z-index: 2;
+
   font-family: "Cormorant Garamond", serif;
-  font-size: 34px;
+  font-size: 43px;
+  font-weight: 500;
+  letter-spacing: 1px;
   color: var(--maroon);
 }
 
-.event-time {
-  margin-top: 10px;
-  color: #71665d;
-  font-size: 12px;
-  letter-spacing: 1px;
+/* Elegant divider */
+
+.event-card .event-name::after {
+  content: "";
+  display: block;
+  width: 45px;
+  height: 1px;
+  margin: 16px auto;
+
+  background: var(--gold);
 }
+
+/* Time */
+
+.event-time {
+  display: inline-block;
+
+  padding: 9px 22px;
+
+  border: 1px solid rgba(198,161,91,.45);
+  border-radius: 50px;
+
+  color: var(--maroon);
+  background: rgba(255,255,255,.55);
+
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Subtle date watermark */
+
+.event-card:nth-child(odd)::before {
+  content: "20";
+  position: absolute;
+
+  bottom: -30px;
+  left: 15px;
+
+  font-family: "Cormorant Garamond", serif;
+  font-size: 150px;
+  line-height: 1;
+
+  color: rgba(198,161,91,.055);
+
+  border: none;
+}
+
+.event-card:nth-child(even)::before {
+  content: "21";
+  position: absolute;
+
+  bottom: -30px;
+  left: 15px;
+
+  font-family: "Cormorant Garamond", serif;
+  font-size: 150px;
+  line-height: 1;
+
+  color: rgba(198,161,91,.055);
+
+  border: none;
+}
+
+
+/* ================= WEDDING CARD ================= */
+
+.event-card.wedding-card {
+  grid-column: 1 / -1;
+
+  min-height: 330px;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(198,161,91,.14),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      #fffdf8,
+      #efe1ca
+    );
+}
+
+.event-card.wedding-card .event-name {
+  font-size: 58px;
+  color: var(--maroon);
+}
+
+.event-card.wedding-card .event-icon {
+  font-size: 18px;
+}
+
+.event-card.wedding-card::after {
+  content: "♡";
+  font-size: 25px;
+}
+
+
+/* ================= PHERE CARD ================= */
+
+.event-card.phere-card {
+  grid-column: 1 / -1;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+
+  background:
+    linear-gradient(
+      145deg,
+      #fffdf8,
+      #f1e4cf
+    );
+}
+
+.event-card.phere-card .event-name {
+  font-size: 48px;
+}
+
+
+/* ================= STACKED GRID (used for 21 March: Mehendi / Wedding / Phere) ================= */
+
+.event-grid.event-grid--stack {
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+.event-card.mehendi-card {
+  max-width: 650px;
+  width: 100%;
+  margin: 0 auto;
+}
+
 
 /* ---------- COUPLE ---------- */
 
@@ -397,6 +579,29 @@ footer {
 
   .event-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .event-card {
+    min-height: 245px;
+    padding: 38px 25px;
+  }
+
+  .event-card.wedding-card,
+  .event-card.phere-card {
+    grid-column: auto;
+  }
+
+  .event-card.wedding-card {
+    min-height: 290px;
+  }
+
+  .event-name {
+    font-size: 38px;
+  }
+
+  .event-card.wedding-card .event-name {
+    font-size: 48px;
   }
 
   .couple-photo {
@@ -469,7 +674,7 @@ footer {
 
 <!-- MUSIC -->
 
-<audio id="weddingMusic" loop>
+<audio id="weddingMusic" loop muted autoplay playsinline>
   <!-- Replace with media/wedding-song.mp3 -->
   <source src="media/wedding-song.mp3" type="audio/mpeg">
 </audio>
@@ -551,9 +756,9 @@ footer {
     21 March 2027
   </div>
 
-  <div class="event-grid">
+  <div class="event-grid event-grid--stack">
 
-    <div class="event-card reveal">
+    <div class="event-card mehendi-card reveal">
       <div class="event-icon">✦</div>
       <div class="event-name">Mehendi</div>
       <div class="event-time">
@@ -561,7 +766,7 @@ footer {
       </div>
     </div>
 
-    <div class="event-card reveal">
+    <div class="event-card wedding-card reveal">
       <div class="event-icon">♡</div>
       <div class="event-name">Wedding</div>
       <div class="event-time">
@@ -569,7 +774,7 @@ footer {
       </div>
     </div>
 
-    <div class="event-card reveal">
+    <div class="event-card phere-card reveal">
       <div class="event-icon">◈</div>
       <div class="event-name">Phere</div>
       <div class="event-time">
@@ -684,43 +889,62 @@ document.querySelectorAll(".reveal")
   .forEach(el => observer.observe(el));
 
 
-/* ---------- MUSIC ---------- */
+/* ---------- MUSIC (muted autoplay + auto-unmute on first interaction) ---------- */
 
 const music = document.getElementById("weddingMusic");
 const musicBtn = document.getElementById("musicBtn");
 
-let playing = false;
+let soundOn = false;
 
-musicBtn.addEventListener("click", () => {
+/* Audio has muted + autoplay in HTML, so it starts playing silently right away */
+music.play().catch(() => {});
+musicBtn.innerHTML = "♪";
 
-  if (playing) {
-    music.pause();
-    musicBtn.innerHTML = "♪";
-  } else {
-    music.play();
-    musicBtn.innerHTML = "Ⅱ";
+/* As soon as visitor does ANYTHING on the page (scroll, tap, click),
+   unmute automatically — this is the closest thing to true autoplay
+   that browsers allow. */
+
+function unmuteMusic() {
+
+  if (soundOn) return;
+
+  music.muted = false;
+  music.play().catch(() => {});
+
+  soundOn = true;
+  musicBtn.innerHTML = "Ⅱ";
+
+  document.removeEventListener("click", unmuteMusic);
+  document.removeEventListener("touchstart", unmuteMusic);
+  document.removeEventListener("scroll", unmuteMusic);
+
+}
+
+document.addEventListener("click", unmuteMusic, { once: true });
+document.addEventListener("touchstart", unmuteMusic, { once: true, passive: true });
+document.addEventListener("scroll", unmuteMusic, { once: true, passive: true });
+
+
+/* Music ON / OFF button */
+
+musicBtn.addEventListener("click", (event) => {
+
+  event.stopPropagation();
+
+  if (!soundOn) {
+    unmuteMusic();
+    return;
   }
 
-  playing = !playing;
+  if (music.paused) {
+    music.play().catch(() => {});
+    musicBtn.innerHTML = "Ⅱ";
+  } else {
+    music.pause();
+    musicBtn.innerHTML = "♪";
+  }
 
 });
-
-
-/*
-  Browser autoplay policy means music may not automatically
-  start until the visitor interacts with the page.
-*/
-
-document.querySelector(".hero-button")
-  .addEventListener("click", () => {
-
-    if (!playing) {
-      music.play().catch(() => {});
-      playing = true;
-      musicBtn.innerHTML = "Ⅱ";
-    }
-
-  });
 
 </script>
 
