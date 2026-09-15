@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/x-icon" href="favicon.ico">
 <title>Abhishek & Arti | Wedding Invitation</title>
 <meta name="description" content="Join us as Abhishek & Arti begin their beautiful journey together — 21 March 2027, Gwalior.">
 <meta name="theme-color" content="#4b1821">
@@ -233,6 +232,9 @@ section { padding: 100px 0; }
     opacity: 0;
     transition: transform .5s var(--ease), opacity .4s;
     pointer-events: none;
+    z-index: 199;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .nav-links.open {
     transform: translateY(0);
@@ -240,6 +242,12 @@ section { padding: 100px 0; }
     pointer-events: auto;
   }
   .nav-links a { color: var(--maroon); font-size: 14px; }
+}
+
+/* Prevent the page behind the open mobile menu from scrolling */
+body.nav-locked {
+  width: 100%;
+  overflow: hidden;
 }
 
 /* ==========================================================================
@@ -1222,23 +1230,40 @@ try {
   const nav = document.getElementById("mainNav");
   const toggle = document.getElementById("navToggle");
   const links = document.getElementById("navLinks");
+  let lockedScrollY = 0;
 
   window.addEventListener("scroll", () => {
     nav.classList.toggle("solid", window.scrollY > 60);
   }, { passive: true });
 
+  // Lock the background page while the mobile menu is open, so scrolling
+  // behind the open menu can't shift the page and cause a "jump" on close.
+  function openMenu() {
+    lockedScrollY = window.scrollY;
+    document.body.style.top = `-${lockedScrollY}px`;
+    document.body.classList.add("nav-locked");
+    document.body.style.position = "fixed";
+    links.classList.add("open");
+    toggle.classList.add("open");
+    toggle.setAttribute("aria-expanded", "true");
+  }
+
+  function closeMenu() {
+    document.body.classList.remove("nav-locked");
+    document.body.style.position = "";
+    document.body.style.top = "";
+    window.scrollTo(0, lockedScrollY);
+    links.classList.remove("open");
+    toggle.classList.remove("open");
+    toggle.setAttribute("aria-expanded", "false");
+  }
+
   toggle.addEventListener("click", () => {
-    const open = links.classList.toggle("open");
-    toggle.classList.toggle("open", open);
-    toggle.setAttribute("aria-expanded", open);
+    if (links.classList.contains("open")) closeMenu(); else openMenu();
   });
 
   links.querySelectorAll("a").forEach(a => {
-    a.addEventListener("click", () => {
-      links.classList.remove("open");
-      toggle.classList.remove("open");
-      toggle.setAttribute("aria-expanded", "false");
-    });
+    a.addEventListener("click", closeMenu);
   });
 })();
 
