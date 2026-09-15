@@ -322,6 +322,28 @@ tr:last-child td { border-bottom: none; }
       </tbody>
     </table>
   </div>
+
+  <div class="dash-header" style="margin-top:56px;">
+    <div>
+      <div class="dash-title" style="font-size:28px;">Wedding Wishes</div>
+      <div class="dash-sub" id="wishesCount">—</div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Guest</th>
+          <th>Wish</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="wishesTableBody">
+        <tr><td colspan="3" class="loading-state">Loading wishes...</td></tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <script>
@@ -373,6 +395,7 @@ function showDashboard() {
   loginView.style.display = "none";
   dashView.style.display = "block";
   loadRSVPs();
+  loadWishes();
 }
 
 loginForm.addEventListener("submit", async (e) => {
@@ -427,6 +450,45 @@ async function loadRSVPs() {
   } catch (err) {
     console.error("Failed to load RSVPs:", err);
     tbody.innerHTML = `<tr><td colspan="4" class="empty-state">Could not load responses. Please check your connection or sign-in status.</td></tr>`;
+  }
+}
+
+/* ---------- WISHES ---------- */
+
+async function loadWishes() {
+  const tbody = document.getElementById("wishesTableBody");
+  const countLabel = document.getElementById("wishesCount");
+  tbody.innerHTML = `<tr><td colspan="3" class="loading-state">Loading wishes...</td></tr>`;
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("wishes")
+      .select("guest_name, message, created_at")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    const wishes = data || [];
+    countLabel.textContent = `${wishes.length} wish${wishes.length === 1 ? "" : "es"} received`;
+
+    if (wishes.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="3" class="empty-state">No wishes yet.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = wishes.map(w => {
+      const date = new Date(w.created_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+      return `
+        <tr>
+          <td>${escapeHTML(w.guest_name)}</td>
+          <td>${escapeHTML(w.message)}</td>
+          <td>${date}</td>
+        </tr>`;
+    }).join("");
+  } catch (err) {
+    console.error("Failed to load wishes:", err);
+    countLabel.textContent = "";
+    tbody.innerHTML = `<tr><td colspan="3" class="empty-state">Could not load wishes. Make sure the "wishes" table and its authenticated-read policy exist (see setup guide).</td></tr>`;
   }
 }
 
